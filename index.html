@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ICAway | Cultural Etiquette & Compare with U.S.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.jpg" />
+</head>
+<body>
+  <header class="site-header">
+  <div class="brand">
+    <img src="logo.jpg" alt="ICAway logo" class="logo" />
+    <div class="titles">
+      <h1>ICAway Cultural Etiquette</h1>
+      <p class="subtitle">Explore etiquette by country • Compare cultures</p>
+    </div>
+  </div>
+
+  <div class="controls">
+    <!-- Replaced OECD with The Culture Factor -->
+    <a class="btn btn-primary" 
+       href="https://www.theculturefactor.com/country-comparison-tool" 
+       target="_blank" rel="noopener">
+      Country Comparison Tool
+    </a>
+
+    <!-- Etiquette links modal stays the same -->
+    <button class="btn btn-ghost" id="openEtiquette" type="button" aria-haspopup="dialog" aria-controls="etiquetteModal">
+      Etiquette Links (All Countries)
+    </button>
+  </div>
+</header>
+
+
+  <main class="panel">
+    <p class="hint">
+      Click <strong>Etiquette Links</strong> to open all countries, or use the country comparison tool to view socio‑economic charts.
+    </p>
+
+    <!-- (Optional) Inline fallback container if JS is disabled -->
+    <div id="inlineLinks" class="link-grid hidden" aria-hidden="true"></div>
+  </main>
+
+  <footer class="site-footer">
+    <small>Sources: eDiplomat Cultural Etiquette • The Culture Factor Country Comparison Tool</small>
+  </footer>
+
+  <!-- Etiquette Modal -->
+  <div id="etiquetteModal" class="modal hidden" aria-hidden="true" role="dialog" aria-label="All Etiquette Links">
+    <div class="modal-card" role="document">
+      <div class="modal-head">
+        <h3>All eDiplomat Etiquette Links</h3>
+        <button class="icon-btn" id="closeEtiquette" type="button" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="etiquetteLinks" class="link-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

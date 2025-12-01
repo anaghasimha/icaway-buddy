@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ICAway Buddy</title>
+
+  <style>
+    /* ========= GLOBAL LAYOUT ========= */
+    :root {
+      --deep-blue: #0E559D;
+      --light-blue: #B0CCE8;
+      --orange: #F59B33;
+      --light-orange: #FACD99;
+      --gray: #CCCCCC;
+      --light-gray: #EBEBEB;
+      --white: #FFFFFF;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--deep-blue);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", Roboto,
+        "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      color: var(--deep-blue);
+    }
+
+    .chat-shell {
+      width: 100%;
+      max-width: 760px;
+      height: 100vh;
+      padding: 16px;
+      background-color: var(--light-gray);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    /* ========= HEADER ========= */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--gray);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      height: 46px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .app-title {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--deep-blue);
+    }
+
+    .app-subtitle {
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    .header-status {
+      font-size: 0.7rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    #status-dot {
+      color: #22c55e;
+      font-size: 0.8rem;
+    }
+
+    /* ========= MESSAGES AREA ========= */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 4px 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .messages::-webkit-scrollbar-thumb {
+      background-color: #94a3b8;
+      border-radius: 999px;
+    }
+
+    /* ========= BUBBLES ========= */
+    .bubble {
+      max-width: 80%;
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .bubble.user {
+      margin-left: auto;
+      background-color: var(--orange);
+      color: var(--white);
+    }
+
+    .bubble.ai {
+      margin-right: auto;
+      background-color: var(--light-blue);
+      color: var(--deep-blue);
+    }
+
+    .role {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+    }
+
+    .bubble.ai .role {
+      color: var(--deep-blue);
+    }
+
+    .bubble.user .role {
+      color: var(--white);
+    }
+
+    .assistant-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .assistant-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--deep-blue);
+      background-color: var(--white);
+    }
+
+    .msgtext {
+      font-size: 0.95rem;
+    }
+
+    /* ========= INPUT AREA ========= */
+    .input-row {
+      border-top: 1px solid var(--gray);
+      padding-top: 10px;
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    textarea {
+      flex: 1;
+      resize: none;
+      min-height: 48px;
+      max-height: 120px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      border: 1px solid var(--gray);
+      background-color: var(--white);
+      color: var(--deep-blue);
+      outline: none;
+    }
+
+    textarea::placeholder {
+      color: #9ca3af;
+    }
+
+    textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(245, 155, 51, 0.3);
+    }
+
+    button.send-btn {
+      background-color: var(--orange);
+      border: none;
+      border-radius: 12px;
+      color: var(--white);
+      padding: 10px 16px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    button.send-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    button.send-btn:hover:enabled {
+      background-color: #f97316;
+    }
+
+    /* ========= LINKS IN MESSAGES ========= */
+    .msgtext a {
+      color: var(--orange);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .msgtext a:hover {
+      color: var(--light-orange);
+    }
+
+    /* ========= FOOTER ========= */
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--deep-blue);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .chat-shell {
+        height: 100vh;
+        border-radius: 0;
+      }
+
+      .bubble {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+  <div class="chat-shell">
+    <header>
+  <div class="header-left">
+    <img
+      src="/Users/anaghamv/Documents/iCEP App/ICAway logo_600X600_Zoom banner.jpg"
+      alt="ICAway Logo"
+      class="header-logo"
+    />
+
+    <div class="title-block">
+      <span class="app-title">ICAway Buddy</span>
+      <span class="app-subtitle">Your friendly ICAway learning companion</span>
+    </div>
+  </div>
+
+  <div class="header-status">
+    <span id="status-dot">●</span>
+    <span>online</span>
+  </div>
+</header>
+
+
+    <div id="messages" class="messages">
+      <!-- chat bubbles will be appended here -->
+    </div>
+
+    <div class="input-row">
+      <textarea id="questionInput" placeholder="Ask something from your Notion... like 'What do I need to do first?'"></textarea>
+      <button id="sendBtn" class="send-btn">Ask</button>
+    </div>
+
+    <footer>
+      iCEP is running locally using Ollama + ChromaDB + MiniLM
+    </footer>
+  </div>
+
+  <script>
+    const messagesEl = document.getElementById("messages");
+    const inputEl = document.getElementById("questionInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    function linkify(text) {
+  // turns plain URLs into <a> links
+    const urlRegex = /(https?:\/\/[^\s)]+)(?=\)|\s|$)/g;
+    return (text || "").replace(urlRegex, (url) => {
+    const safe = url.replace(/"/g, "&quot;");
+    return `<a href="${safe}" target="_blank" rel="noopener noreferrer">${safe}</a>`;
+  });
+  }
+
+
+    // utility to create a chat bubble
+    function addMessageBubble(role, text, sources = null) {
+  const messagesEl = document.getElementById("messages");
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble " + (role === "you" ? "user" : "ai");
+
+  const msgHeader = document.createElement("div");
+
+  if (role === "you") {
+    // user label only
+    msgHeader.className = "role";
+    msgHeader.textContent = "You";
+  } else {
+    // assistant avatar + label
+    msgHeader.className = "assistant-header";
+
+    const avatar = document.createElement("img");
+    avatar.src = "/Users/anaghamv/Documents/ICAway Social Logo-SQ.png"; // ensure this filename exists
+    avatar.alt = "ICAway Buddy";
+    avatar.className = "assistant-avatar";
+
+    const roleLabel = document.createElement("div");
+    roleLabel.className = "role";
+    roleLabel.textContent = "ICAway Buddy";
+
+    msgHeader.appendChild(avatar);
+    msgHeader.appendChild(roleLabel);
+  }
+
+  const textEl = document.createElement("div");
+  textEl.className = "msgtext";
+
+  if (role === "you") {
+    textEl.textContent = text;
+  } else {
+    // assistant: clickable links
+    textEl.innerHTML = linkify(text);
+  }
+
+  bubble.appendChild(msgHeader);
+  bubble.appendChild(textEl);
+
+  messagesEl.appendChild(bubble);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+
+    async function sendQuestion() {
+      const q = inputEl.value.trim();
+      if (!q) return;
+
+      // UI: lock input immediately
+      sendBtn.disabled = true;
+      inputEl.disabled = true;
+
+      // show user's bubble
+      addMessageBubble("you", q);
+
+      // optimistic assistant bubble while loading
+      const thinkingRow = document.createElement("div");
+      thinkingRow.className = "bubble-row";
+      const thinkingBubble = document.createElement("div");
+      thinkingBubble.className = "bubble ai";
+      thinkingBubble.innerHTML = '<div class="role">assistant</div><div class="msgtext">thinking...</div>';
+      thinkingRow.appendChild(thinkingBubble);
+      messagesEl.appendChild(thinkingRow);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      try {
+        // call the FastAPI backend
+        const res = await fetch("http://localhost:8000/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question: q,
+            top_k: 3,
+            model: "llama3:8b"
+          })
+        });
+
+        if (!res.ok) {
+          throw new Error("Server error " + res.status);
+        }
+
+        const data = await res.json();
+
+        // remove "thinking..." bubble
+        thinkingRow.remove();
+
+        // show final assistant bubble with sources
+        addMessageBubble("assistant", data.answer || "(no answer)", data.sources || []);
+
+      } catch (err) {
+        console.error(err);
+
+        // remove "thinking..." bubble
+        thinkingRow.remove();
+
+        // show error bubble
+        addMessageBubble("assistant", "Something went wrong talking to the backend.");
+      }
+
+      // reset UI
+      inputEl.value = "";
+      sendBtn.disabled = false;
+      inputEl.disabled = false;
+      inputEl.focus();
+    }
+
+    sendBtn.addEventListener("click", sendQuestion);
+
+    // allow pressing Enter to send (Shift+Enter = newline)
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendQuestion();
+      }
+    });
+  </script>
+</body>
+</html>
