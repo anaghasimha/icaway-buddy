@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ========= CONFIG =========
-EXCEL_PATH = "/Users/anaghamv/Downloads/icaway_lms_links.xlsx"   # your Excel file with Name + Link columns
+EXCEL_PATH = "icaway_lms_links.xlsx"   # your Excel file with Name + Link columns
 EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODEL = "llama-3.3-70b-versatile"   # or "llama3-8b-8192"
